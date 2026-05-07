@@ -4,10 +4,10 @@
 
   </div>
 
-  <!-- SEARCH COMPONENT -->
+
   <div class="search-widget-container">
 
-    <!-- TABS -->
+    
     <div class="tabs-container">
       <button class="tab-btn" [class.active]="activeTab === 'flights'" (click)="setTab('flights')">
         <span class="material-symbols-outlined">flight</span> Flights
@@ -17,10 +17,10 @@
       </button>
     </div>
 
-    <!-- WHITE CARD -->
+
     <div class="search-card">
 
-      <!-- FLIGHTS CONTENT -->
+      <!-- Flights Content -->
       <ng-container *ngIf="activeTab === 'flights'">
         <div class="flight-types">
           <label class="radio-label">
@@ -43,7 +43,7 @@
           </label>
         </div>
 
-        <!-- ONE WAY -->
+        <!-- One Way -->
         <div class="form-grid one-way-grid" *ngIf="flightType === 'one-way'">
           <div class="input-group location-group">
             <div class="input-box from-box">
@@ -67,9 +67,9 @@
             </div>
             <div class="day-name">{{getDepartureDayName()}}</div>
 
-            <!-- Custom Calendar Dropdown -->
+           
             <div class="calendar-dropdown" *ngIf="activeCalendar === 'depart'" (click)="$event.stopPropagation()">
-              <!-- Calendar Header -->
+           
               <div class="calendar-header">
                 <button class="icon-btn" (click)="prevMonth($event)"><span
                     class="material-symbols-outlined">chevron_left</span></button>
@@ -86,8 +86,10 @@
               <!-- Days Grid -->
               <div class="calendar-grid">
                 <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
-                <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
-                  (click)="selectDate(day, $event)">
+                <div *ngFor="let day of monthDays" class="calendar-day" 
+                     [class.selected]="isSelectedDate(day)"
+                     [class.disabled]="isPastDate(day)"
+                     (click)="selectDate(day, $event)">
                   {{ day }}
                 </div>
               </div>
@@ -211,6 +213,7 @@
               <div class="calendar-grid">
                 <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
                 <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                  [class.disabled]="isPastDate(day)"
                   (click)="selectDate(day, $event)">
                   {{ day }}
                 </div>
@@ -234,9 +237,9 @@
               <div class="value-date" style="font-size: 16px; color: #a0a0a0; margin-top: 10px;">Select Return</div>
             </ng-template>
 
-            <!-- Custom Calendar Dropdown (Return) -->
+      
             <div class="calendar-dropdown" *ngIf="activeCalendar === 'return'" (click)="$event.stopPropagation()">
-              <!-- Calendar Header -->
+      
               <div class="calendar-header">
                 <button class="icon-btn" (click)="prevMonth($event)"><span
                     class="material-symbols-outlined">chevron_left</span></button>
@@ -254,6 +257,7 @@
               <div class="calendar-grid">
                 <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
                 <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                  [class.disabled]="isPastDate(day)"
                   (click)="selectDate(day, $event)">
                   {{ day }}
                 </div>
@@ -386,6 +390,7 @@
                   <div class="calendar-grid">
                     <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
                     <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                      [class.disabled]="isPastDate(day)"
                       (click)="selectDate(day, $event)">
                       {{ day }}
                     </div>
@@ -466,11 +471,11 @@
               </div>
 
               <div class="route-actions" *ngIf="i > 0">
-                <!-- Show Remove Route for middle legs -->
+             
                 <button class="remove-route-btn" (click)="removeRoute(i)" *ngIf="!isLast && multiCityRoutes.length > 2">
                   <span class="close-icon-circle">×</span> Remove Route
                 </button>
-                <!-- Show Add another Route ONLY for the last leg -->
+             
                 <button class="add-route-btn" (click)="addRoute()" *ngIf="isLast && multiCityRoutes.length < 5">
                   <span class="plus">+</span> Add another Route
                 </button>
@@ -545,7 +550,7 @@
               </div>
               <div class="day-name">{{getDayName(checkOutDate)}}</div>
 
-              <!-- Custom Calendar Dropdown -->
+              <!-- Calendar Dropdown -->
               <div class="calendar-dropdown" *ngIf="activeCalendar === 'checkout'" (click)="$event.stopPropagation()">
                 <div class="calendar-header">
                   <button class="icon-btn" (click)="prevMonth($event)"><span
@@ -651,7 +656,7 @@
         </div>
       </ng-container>
 
-      <!-- SEARCH BUTTON -->
+      <!-- Search button-->
       <div class="search-btn-wrapper">
         <button class="primary-search-btn">
           <span class="material-symbols-outlined">search</span> Search

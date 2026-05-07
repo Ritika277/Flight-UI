@@ -1,11 +1,11 @@
-// Variables
+
 $bg-color: #f7f8fb;
 $text-dark: #333;
 $text-gray: #555;
 $primary-blue: #0a0d61;
 $border-color: #e5e5e5;
 
-// Wrapper & Container
+
 .footer-wrapper {
   background-color: $bg-color;
   padding: 60px 40px 30px;
@@ -18,7 +18,6 @@ $border-color: #e5e5e5;
   margin: 0 auto;
 }
 
-// Typography
 h4 {
   font-size: 15px;
   font-weight: 600;
@@ -47,7 +46,7 @@ ul {
   }
 }
 
-// Top Section
+
 .footer-top-section {
   display: flex;
   justify-content: space-between;
@@ -65,7 +64,7 @@ ul {
   flex: 1;
 }
 
-// Download Section
+
 .footer-download {
   h4 {
     margin-bottom: 15px;
@@ -80,7 +79,7 @@ ul {
   .qr-code {
     width: 90px;
     height: 90px;
-    object-fit: cover; // Temporary due to mach-logo aspect ratio
+    object-fit: cover; 
     border: 1px solid #ddd;
     border-radius: 4px;
     background: #fff;
@@ -95,15 +94,15 @@ ul {
     .store-btn {
       width: 130px;
       height: 40px;
-      object-fit: cover; // Temporary
+      object-fit: cover; 
       border-radius: 6px;
-      background: #333; // Temporary dark background to mimic app store buttons
+      background: #333; 
       padding: 2px;
     }
   }
 }
 
-// Middle Section
+
 .footer-middle-section {
   display: flex;
   justify-content: space-between;
@@ -159,14 +158,14 @@ ul {
   }
 }
 
-// Divider
+
 .footer-divider {
   height: 1px;
   background-color: $border-color;
   margin: 25px 0;
 }
 
-// Bottom Section
+
 .footer-bottom-section {
   display: flex;
   justify-content: space-between;
@@ -216,7 +215,7 @@ ul {
   }
 }
 
-// Partners Section
+
 .footer-partners {
   display: flex;
   justify-content: space-between;
@@ -242,7 +241,6 @@ ul {
   }
 }
 
-// Responsive Layout
 @media (max-width: 1024px) {
   .footer-wrapper {
     padding: 50px 30px 30px;
@@ -280,7 +278,7 @@ ul {
     gap: 30px 10px;
 
     .footer-col {
-      flex: 0 0 calc(50% - 10px); // 2 columns on mobile
+      flex: 0 0 calc(50% - 10px); 
     }
   }
 

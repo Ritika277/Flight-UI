@@ -97,6 +97,13 @@ export class HeroComponent {
 
   selectDate(day: number, event: Event) {
     event.stopPropagation();
+    
+    // Prevent selection of past dates for departure and return flight calendars and multi-city legs
+    if ((this.activeCalendar === 'depart' || this.activeCalendar === 'return' || typeof this.activeCalendar === 'number')
+        && this.isPastDate(day)) {
+      return;
+    }
+    
     const newDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), day);
     const dateStr = `${newDate.getFullYear()}-${(newDate.getMonth() + 1).toString().padStart(2, '0')}-${newDate.getDate().toString().padStart(2, '0')}`;
     
@@ -145,14 +152,25 @@ export class HeroComponent {
            selected.getFullYear() === this.currentDate.getFullYear();
   }
 
+  isPastDate(day: number): boolean {
+    if (this.activeCalendar !== 'depart' && this.activeCalendar !== 'return' && typeof this.activeCalendar !== 'number') return false;
+    
+    const checkDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    checkDate.setHours(0, 0, 0, 0);
+    
+    return checkDate < today;
+  }
+
   @HostListener('document:click', ['$event'])
-  onDocumentClick() {
+  onDocumentClick(event: Event) {
     this.activeCalendar = null;
     this.isTravellerModalOpen = false;
     this.isHotelGuestsModalOpen = false;
   }
   
-  // Modal State
+  
   isTravellerModalOpen: boolean = false;
   travellers = {
     adults: 1,
@@ -161,7 +179,7 @@ export class HeroComponent {
   };
   flightClass: string = 'Economy';
 
-  // State methods
+
   setTab(tab: 'flights' | 'hotels') {
     this.activeTab = tab;
   }
@@ -280,7 +298,7 @@ export class HeroComponent {
     return this.travellers.adults + this.travellers.children + this.travellers.infants;
   }
 
-  // Hotel specific methods
+
   getNightsCount(): number {
     const start = new Date(this.checkInDate);
     const end = new Date(this.checkOutDate);

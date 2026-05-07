@@ -1,4 +1,4 @@
-// Variables
+
 $primary-color: #0c134f;
 $secondary-color: #1d2671;
 $text-dark: #333;
@@ -9,7 +9,7 @@ $white: #ffffff;
 $accent-blue: #007bff;
 $font-family: 'Poppins', sans-serif;
 
-// Mixins
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -22,7 +22,7 @@ $font-family: 'Poppins', sans-serif;
   align-items: center;
 }
 
-// Global Classes based on HTML
+
 .desktop-only {
   display: inline-block;
 }
@@ -38,7 +38,7 @@ $font-family: 'Poppins', sans-serif;
   z-index: 1000;
 }
 
-// HEADER
+
 .app-header {
   color: $white;
   padding: 10px 40px 0;
@@ -78,20 +78,20 @@ $font-family: 'Poppins', sans-serif;
 .top-nav {
   display: flex;
   gap: 20px;
-  font-size: 14px; // Increased from 13px
+  font-size: 14px; 
 
   a {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: $white; // Bold white
+    color: $white; 
     font-weight: 600;
     transition: all 0.3s ease;
     padding: 4px 8px;
     border-radius: 6px;
 
     &:hover {
-      color: #ffaa00; // Light orange on hover
+      color: #ffaa00;
       background: rgba(255, 255, 255, 0.1);
       transform: translateY(-1px);
     }
@@ -127,7 +127,7 @@ $font-family: 'Poppins', sans-serif;
 
   .phone {
     font-weight: 600;
-    color: #ffaa00; // Gold for highlight
+    color: #ffaa00; 
     
     &:hover {
       color: #ffbb33;
