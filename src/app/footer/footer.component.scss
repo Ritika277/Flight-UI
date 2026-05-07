@@ -1,0 +1,325 @@
+// Variables
+$bg-color: #f7f8fb;
+$text-dark: #333;
+$text-gray: #555;
+$primary-blue: #0a0d61;
+$border-color: #e5e5e5;
+
+// Wrapper & Container
+.footer-wrapper {
+  background-color: $bg-color;
+  padding: 60px 40px 30px;
+  margin-top: 50px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Typography
+h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-dark;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    margin-bottom: 12px;
+
+    a {
+      text-decoration: none;
+      color: $text-gray;
+      font-size: 13px;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $primary-blue;
+      }
+    }
+  }
+}
+
+// Top Section
+.footer-top-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.footer-links {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-col {
+  flex: 1;
+}
+
+// Download Section
+.footer-download {
+  h4 {
+    margin-bottom: 15px;
+  }
+}
+
+.download-content {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  .qr-code {
+    width: 90px;
+    height: 90px;
+    object-fit: cover; // Temporary due to mach-logo aspect ratio
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    padding: 5px;
+  }
+
+  .app-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .store-btn {
+      width: 130px;
+      height: 40px;
+      object-fit: cover; // Temporary
+      border-radius: 6px;
+      background: #333; // Temporary dark background to mimic app store buttons
+      padding: 2px;
+    }
+  }
+}
+
+// Middle Section
+.footer-middle-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 40px;
+}
+
+.footer-logo {
+  img {
+    height: 70px;
+    object-fit: contain;
+  }
+}
+
+.footer-subscribe {
+  .subscribe-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    background: #fff;
+    overflow: hidden;
+    height: 40px;
+
+    input {
+      border: none;
+      padding: 0 15px;
+      width: 260px;
+      font-size: 13px;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    button {
+      background: $primary-blue;
+      color: #fff;
+      border: none;
+      padding: 0 25px;
+      height: 100%;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #161a8f;
+      }
+    }
+  }
+}
+
+// Divider
+.footer-divider {
+  height: 1px;
+  background-color: $border-color;
+  margin: 25px 0;
+}
+
+// Bottom Section
+.footer-bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: $text-gray;
+}
+
+.copyright {
+  flex: 1;
+}
+
+.legal-links {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  justify-content: center;
+
+  a {
+    color: $text-gray;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      color: $primary-blue;
+    }
+  }
+}
+
+.social-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  flex: 1;
+
+  .social-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(60%); // Gives a gray look to the temporary image
+    transition: filter 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      filter: grayscale(0%) opacity(100%);
+    }
+  }
+}
+
+// Partners Section
+.footer-partners {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 25px;
+
+  // .partner-logo {
+  //   height: 35px;
+  //   object-fit: contain;
+  //   max-width: 90px;
+  //   filter: grayscale(100%); // Optional: to make the temporary logos look unified
+  //   opacity: 0.8;
+  // }
+
+  .partner-logo {
+    /* height: 35px; */
+    object-fit: contain;
+    max-width: 90px;
+    /* filter: grayscale(100%); */
+    // opacity: 0.8;
+  }
+}
+
+// Responsive Layout
+@media (max-width: 1024px) {
+  .footer-wrapper {
+    padding: 50px 30px 30px;
+  }
+
+  .footer-top-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .footer-links {
+    width: 100%;
+  }
+
+  .footer-bottom-section {
+    flex-wrap: wrap;
+    gap: 15px;
+
+    .legal-links {
+      order: -1;
+      width: 100%;
+      flex: none;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-wrapper {
+    padding: 40px 20px 20px;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 30px 10px;
+
+    .footer-col {
+      flex: 0 0 calc(50% - 10px); // 2 columns on mobile
+    }
+  }
+
+  .footer-middle-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+  }
+
+  .footer-subscribe {
+    width: 100%;
+
+    .subscribe-input-group {
+      width: 100%;
+
+      input {
+        flex: 1;
+        width: auto;
+      }
+    }
+  }
+
+  .footer-bottom-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+
+    .copyright,
+    .social-icons {
+      justify-content: center;
+    }
+  }
+
+  .footer-partners {
+    justify-content: center;
+    gap: 20px;
+
+    .partner-logo {
+      height: 30px;
+    }
+  }
+}

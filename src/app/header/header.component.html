@@ -1,0 +1,59 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="assets/images/mach-logo.png" alt="Mach Travel Logo">
+    </div>
+
+    <div class="nav-section desktop-only">
+      <div class="top-nav">
+        <a href="#"><span class="material-symbols-outlined">person</span> About us</a>
+        <a href="#"><span class="material-symbols-outlined">sell</span> Offers</a>
+        <a href="#"><span class="material-symbols-outlined">work</span> My Bookings</a>
+        <a href="#" class="login-btn"><span class="material-symbols-outlined">login</span> Login</a>
+        <a href="#"><span class="material-symbols-outlined">support_agent</span> Support</a>
+        <a href="#" class="phone"><span class="material-symbols-outlined">call</span> +91 99583 30665</a>
+      </div>
+      <div class="bottom-nav">
+        <a href="#" class="active">Flight</a>
+        <a href="#">Hotel</a>
+        <a href="#">Cruise</a>
+        <a href="#">MICE</a>
+        <a href="#">Visa</a>
+      </div>
+    </div>
+
+    <div class="mobile-menu-icon mobile-only" (click)="toggleMobileMenu()">
+      <span class="material-symbols-outlined">menu</span>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Sidebar Overlay -->
+<div class="mobile-menu-overlay" *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
+
+<!-- Mobile Sidebar -->
+<div class="mobile-sidebar" [class.open]="isMobileMenuOpen">
+  <div class="sidebar-header">
+    <img src="assets/images/mach-logo.png" alt="Mach Travel Logo" class="sidebar-logo">
+    <span class="material-symbols-outlined close-icon" (click)="toggleMobileMenu()">close</span>
+  </div>
+  
+  <div class="sidebar-content">
+    <div class="sidebar-nav primary-nav">
+      <a href="#" class="active">Flight</a>
+      <a href="#">Hotel</a>
+      <a href="#">Cruise</a>
+      <a href="#">MICE</a>
+      <a href="#">Visa</a>
+    </div>
+    <hr>
+    <div class="sidebar-nav secondary-nav">
+      <a href="#"><span class="material-symbols-outlined">person</span> About us</a>
+      <a href="#"><span class="material-symbols-outlined">sell</span> Offers</a>
+      <a href="#"><span class="material-symbols-outlined">work</span> My Bookings</a>
+      <a href="#"><span class="material-symbols-outlined">login</span> Login</a>
+      <a href="#"><span class="material-symbols-outlined">support_agent</span> Support</a>
+      <a href="#" class="phone"><span class="material-symbols-outlined">call</span> +91 99583 30665</a>
+    </div>
+  </div>
+</div>

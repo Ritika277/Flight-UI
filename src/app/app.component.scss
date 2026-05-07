@@ -1,0 +1,51 @@
+// Variables
+$primary-color: #0c134f;
+$secondary-color: #1d2671;
+$text-dark: #333;
+$text-gray: #7a7a7a;
+$text-light-gray: #a3a3a3;
+$border-color: #e5e5e5;
+$white: #ffffff;
+$accent-blue: #007bff;
+$font-family: 'Poppins', sans-serif;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Global Classes based on HTML
+.desktop-only {
+  display: inline-block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+// Main Layout
+.main-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: inline-block !important;
+  }
+}

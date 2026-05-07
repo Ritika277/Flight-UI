@@ -1,0 +1,663 @@
+<section class="hero-section">
+  <div class="hero-bg">
+    <img src="assets/images/plane-bg.png" alt="Airplane Background">
+
+  </div>
+
+  <!-- SEARCH COMPONENT -->
+  <div class="search-widget-container">
+
+    <!-- TABS -->
+    <div class="tabs-container">
+      <button class="tab-btn" [class.active]="activeTab === 'flights'" (click)="setTab('flights')">
+        <span class="material-symbols-outlined">flight</span> Flights
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'hotels'" (click)="setTab('hotels')">
+        <span class="material-symbols-outlined">apartment</span> Hotels
+      </button>
+    </div>
+
+    <!-- WHITE CARD -->
+    <div class="search-card">
+
+      <!-- FLIGHTS CONTENT -->
+      <ng-container *ngIf="activeTab === 'flights'">
+        <div class="flight-types">
+          <label class="radio-label">
+            <input type="radio" name="flightType" [checked]="flightType === 'one-way'"
+              (change)="setFlightType('one-way')">
+            <span class="radio-custom"></span>
+            One way
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="flightType" [checked]="flightType === 'round-trip'"
+              (change)="setFlightType('round-trip')">
+            <span class="radio-custom"></span>
+            Round trip
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="flightType" [checked]="flightType === 'multi-city'"
+              (change)="setFlightType('multi-city')">
+            <span class="radio-custom"></span>
+            Multi-city
+          </label>
+        </div>
+
+        <!-- ONE WAY -->
+        <div class="form-grid one-way-grid" *ngIf="flightType === 'one-way'">
+          <div class="input-group location-group">
+            <div class="input-box from-box">
+              <span class="label">From</span>
+              <input type="text" [(ngModel)]="fromCity" class="value-input" placeholder="Select City">
+            </div>
+            <button class="swap-btn" (click)="swapCities($event)">
+              <span class="material-symbols-outlined desktop-only">sync_alt</span>
+              <span class="material-symbols-outlined mobile-only">swap_vert</span>
+            </button>
+            <div class="input-box to-box">
+              <span class="label">To</span>
+              <input type="text" [(ngModel)]="toCity" class="value-input" placeholder="Select City">
+            </div>
+          </div>
+
+          <div class="input-box date-box" (click)="toggleCalendar('depart', $event)">
+            <span class="label">Depart</span>
+            <div class="value-date">
+              <span class="day">{{getDepartureDay()}}</span> <span class="month-year">{{getDepartureMonthYear()}}</span>
+            </div>
+            <div class="day-name">{{getDepartureDayName()}}</div>
+
+            <!-- Custom Calendar Dropdown -->
+            <div class="calendar-dropdown" *ngIf="activeCalendar === 'depart'" (click)="$event.stopPropagation()">
+              <!-- Calendar Header -->
+              <div class="calendar-header">
+                <button class="icon-btn" (click)="prevMonth($event)"><span
+                    class="material-symbols-outlined">chevron_left</span></button>
+                <div class="month-title">{{ currentMonthName }} {{ currentYear }}</div>
+                <button class="icon-btn" (click)="nextMonth($event)"><span
+                    class="material-symbols-outlined">chevron_right</span></button>
+              </div>
+
+              <!-- Weekdays -->
+              <div class="calendar-weekdays">
+                <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+              </div>
+
+              <!-- Days Grid -->
+              <div class="calendar-grid">
+                <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
+                <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                  (click)="selectDate(day, $event)">
+                  {{ day }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-box dropdown-box" (click)="toggleTravellerModal($event)">
+            <div class="dropdown-header">
+              <span class="label">Traveller & Class</span>
+              <span class="material-symbols-outlined arrow">keyboard_arrow_down</span>
+            </div>
+            <div class="value-date">
+              <span class="day">{{ getTotalTravellers() }}</span> <span class="month-year">Traveller{{
+                getTotalTravellers() > 1 ? 's' : '' }}</span>
+            </div>
+            <div class="day-name">{{ flightClass }}</div>
+
+            <!-- Traveller Modal -->
+            <div class="traveller-modal" *ngIf="isTravellerModalOpen" (click)="$event.stopPropagation()">
+              <div class="modal-header">
+                <h4>Select Class & Traveller</h4>
+                <span class="material-symbols-outlined close-icon" (click)="closeTravellerModal()">close</span>
+              </div>
+
+              <div class="class-selector">
+                <select [(ngModel)]="flightClass" class="custom-select">
+                  <option value="Economy">Economy Class</option>
+                  <option value="Premium Economy">Premium Economy</option>
+                  <option value="Business">Business Class</option>
+                  <option value="First">First Class</option>
+                </select>
+              </div>
+
+              <div class="traveller-counters">
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Adults</h5>
+                    <p>12+ Years</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="travellers.adults <= 1"
+                      (click)="updateTraveller('adults', 'subtract', $event)">-</button>
+                    <span class="count">{{ travellers.adults }}</span>
+                    <button class="action-btn" (click)="updateTraveller('adults', 'add', $event)">+</button>
+                  </div>
+                </div>
+
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Children</h5>
+                    <p>2-12 Years</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="travellers.children <= 0"
+                      (click)="updateTraveller('children', 'subtract', $event)">-</button>
+                    <span class="count">{{ travellers.children }}</span>
+                    <button class="action-btn" (click)="updateTraveller('children', 'add', $event)">+</button>
+                  </div>
+                </div>
+
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Infants</h5>
+                    <p>0-23 Months</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="travellers.infants <= 0"
+                      (click)="updateTraveller('infants', 'subtract', $event)">-</button>
+                    <span class="count">{{ travellers.infants }}</span>
+                    <button class="action-btn" (click)="updateTraveller('infants', 'add', $event)">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <button class="apply-btn" (click)="closeTravellerModal()">Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUND TRIP -->
+        <div class="form-grid round-trip-grid" *ngIf="flightType === 'round-trip'">
+          <div class="input-group location-group">
+            <div class="input-box from-box">
+              <span class="label">From</span>
+              <input type="text" [(ngModel)]="fromCity" class="value-input" placeholder="Select City">
+            </div>
+            <button class="swap-btn" (click)="swapCities($event)">
+              <span class="material-symbols-outlined desktop-only">sync_alt</span>
+              <span class="material-symbols-outlined mobile-only">swap_vert</span>
+            </button>
+            <div class="input-box to-box">
+              <span class="label">To</span>
+              <input type="text" [(ngModel)]="toCity" class="value-input" placeholder="Select City">
+            </div>
+          </div>
+
+          <div class="input-box date-box" (click)="toggleCalendar('depart', $event)">
+            <span class="label">Depart</span>
+            <div class="value-date">
+              <span class="day">{{getDepartureDay()}}</span> <span class="month-year">{{getDepartureMonthYear()}}</span>
+            </div>
+            <div class="day-name">{{getDepartureDayName()}}</div>
+
+            <!-- Custom Calendar Dropdown (Depart) -->
+            <div class="calendar-dropdown" *ngIf="activeCalendar === 'depart'" (click)="$event.stopPropagation()">
+              <!-- Calendar Header -->
+              <div class="calendar-header">
+                <button class="icon-btn" (click)="prevMonth($event)"><span
+                    class="material-symbols-outlined">chevron_left</span></button>
+                <div class="month-title">{{ currentMonthName }} {{ currentYear }}</div>
+                <button class="icon-btn" (click)="nextMonth($event)"><span
+                    class="material-symbols-outlined">chevron_right</span></button>
+              </div>
+
+              <!-- Weekdays -->
+              <div class="calendar-weekdays">
+                <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+              </div>
+
+              <!-- Days Grid -->
+              <div class="calendar-grid">
+                <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
+                <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                  (click)="selectDate(day, $event)">
+                  {{ day }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-box date-box return-box" (click)="toggleCalendar('return', $event)">
+            <div class="return-header">
+              <span class="label">Return</span>
+              <span class="close-icon-circle clear-icon" *ngIf="returnDate"
+                (click)="$event.stopPropagation(); returnDate=''; setFlightType('one-way')">×</span>
+
+            </div>
+            <div class="value-date" *ngIf="returnDate; else noReturnDate">
+              <span class="day">{{getReturnDay()}}</span> <span class="month-year">{{getReturnMonthYear()}}</span>
+            </div>
+            <div class="day-name" *ngIf="returnDate">{{getReturnDayName()}}</div>
+
+            <ng-template #noReturnDate>
+              <div class="value-date" style="font-size: 16px; color: #a0a0a0; margin-top: 10px;">Select Return</div>
+            </ng-template>
+
+            <!-- Custom Calendar Dropdown (Return) -->
+            <div class="calendar-dropdown" *ngIf="activeCalendar === 'return'" (click)="$event.stopPropagation()">
+              <!-- Calendar Header -->
+              <div class="calendar-header">
+                <button class="icon-btn" (click)="prevMonth($event)"><span
+                    class="material-symbols-outlined">chevron_left</span></button>
+                <div class="month-title">{{ currentMonthName }} {{ currentYear }}</div>
+                <button class="icon-btn" (click)="nextMonth($event)"><span
+                    class="material-symbols-outlined">chevron_right</span></button>
+              </div>
+
+              <!-- Weekdays -->
+              <div class="calendar-weekdays">
+                <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+              </div>
+
+              <!-- Days Grid -->
+              <div class="calendar-grid">
+                <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
+                <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                  (click)="selectDate(day, $event)">
+                  {{ day }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-box dropdown-box" (click)="toggleTravellerModal($event)">
+            <div class="dropdown-header">
+              <span class="label">Traveller & Class</span>
+              <span class="material-symbols-outlined arrow">keyboard_arrow_down</span>
+            </div>
+            <div class="value-date">
+              <span class="day">{{ getTotalTravellers() }}</span> <span class="month-year">Traveller{{
+                getTotalTravellers() > 1 ? 's' : '' }}</span>
+            </div>
+            <div class="day-name">{{ flightClass }}</div>
+
+            <!-- Traveller Modal -->
+            <div class="traveller-modal" *ngIf="isTravellerModalOpen" (click)="$event.stopPropagation()">
+              <div class="modal-header">
+                <h4>Select Class & Traveller</h4>
+                <span class="material-symbols-outlined close-icon" (click)="closeTravellerModal()">close</span>
+              </div>
+
+              <div class="class-selector">
+                <select [(ngModel)]="flightClass" class="custom-select">
+                  <option value="Economy">Economy Class</option>
+                  <option value="Premium Economy">Premium Economy</option>
+                  <option value="Business">Business Class</option>
+                  <option value="First">First Class</option>
+                </select>
+              </div>
+
+              <div class="traveller-counters">
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Adults</h5>
+                    <p>12+ Years</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="travellers.adults <= 1"
+                      (click)="updateTraveller('adults', 'subtract', $event)">-</button>
+                    <span class="count">{{ travellers.adults }}</span>
+                    <button class="action-btn" (click)="updateTraveller('adults', 'add', $event)">+</button>
+                  </div>
+                </div>
+
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Children</h5>
+                    <p>2-12 Years</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="travellers.children <= 0"
+                      (click)="updateTraveller('children', 'subtract', $event)">-</button>
+                    <span class="count">{{ travellers.children }}</span>
+                    <button class="action-btn" (click)="updateTraveller('children', 'add', $event)">+</button>
+                  </div>
+                </div>
+
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Infants</h5>
+                    <p>0-23 Months</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="travellers.infants <= 0"
+                      (click)="updateTraveller('infants', 'subtract', $event)">-</button>
+                    <span class="count">{{ travellers.infants }}</span>
+                    <button class="action-btn" (click)="updateTraveller('infants', 'add', $event)">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <button class="apply-btn" (click)="closeTravellerModal()">Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MULTI CITY -->
+        <div class="multi-city-container" *ngIf="flightType === 'multi-city'">
+          <ng-container *ngFor="let route of multiCityRoutes; let i = index; let isLast = last">
+            <div class="form-grid multi-city-grid" [class.route-2]="i > 0">
+              <div class="input-group location-group">
+                <div class="input-box from-box">
+                  <span class="label">From</span>
+                  <input type="text" [(ngModel)]="route.fromCity" class="value-input" placeholder="Select City">
+                </div>
+                <button class="swap-btn" (click)="swapMultiCity(i, $event)">
+                  <span class="material-symbols-outlined desktop-only">sync_alt</span>
+                  <span class="material-symbols-outlined mobile-only">swap_vert</span>
+                </button>
+                <div class="input-box to-box">
+                  <span class="label">To</span>
+                  <input type="text" [(ngModel)]="route.toCity" class="value-input" placeholder="Select City">
+                </div>
+              </div>
+
+              <div class="input-box date-box" [class.empty-date]="!route.departureDate"
+                (click)="toggleCalendar(i, $event)">
+                <span class="label">Depart</span>
+                <div class="value-date" *ngIf="route.departureDate; else emptyDate">
+                  <span class="day">{{getDay(route.departureDate)}}</span> <span
+                    class="month-year">{{getMonthYear(route.departureDate)}}</span>
+                </div>
+                <div class="day-name" *ngIf="route.departureDate">{{getDayName(route.departureDate)}}</div>
+
+                <ng-template #emptyDate>
+                  <div class="value" style="font-size: 16px; color: #a0a0a0; margin-top: 10px;">Select Date</div>
+                </ng-template>
+
+                <!-- Custom Calendar Dropdown -->
+                <div class="calendar-dropdown" *ngIf="activeCalendar === i" (click)="$event.stopPropagation()">
+                  <!-- Calendar Header -->
+                  <div class="calendar-header">
+                    <button class="icon-btn" (click)="prevMonth($event)"><span
+                        class="material-symbols-outlined">chevron_left</span></button>
+                    <div class="month-title">{{ currentMonthName }} {{ currentYear }}</div>
+                    <button class="icon-btn" (click)="nextMonth($event)"><span
+                        class="material-symbols-outlined">chevron_right</span></button>
+                  </div>
+
+                  <!-- Weekdays -->
+                  <div class="calendar-weekdays">
+                    <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                  </div>
+
+                  <!-- Days Grid -->
+                  <div class="calendar-grid">
+                    <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
+                    <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                      (click)="selectDate(day, $event)">
+                      {{ day }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-box dropdown-box" *ngIf="i === 0" (click)="toggleTravellerModal($event)">
+                <div class="dropdown-header">
+                  <span class="label">Traveller & Class</span>
+                  <span class="material-symbols-outlined arrow">keyboard_arrow_down</span>
+                </div>
+                <div class="value-date">
+                  <span class="day">{{ getTotalTravellers() }}</span> <span class="month-year">Traveller{{
+                    getTotalTravellers() > 1 ? 's' : '' }}</span>
+                </div>
+                <div class="day-name">{{ flightClass }}</div>
+
+                <!-- Traveller Modal -->
+                <div class="traveller-modal" *ngIf="isTravellerModalOpen" (click)="$event.stopPropagation()">
+                  <div class="modal-header">
+                    <h4>Select Class & Traveller</h4>
+                    <span class="material-symbols-outlined close-icon" (click)="closeTravellerModal()">close</span>
+                  </div>
+
+                  <div class="class-selector">
+                    <select [(ngModel)]="flightClass" class="custom-select">
+                      <option value="Economy">Economy Class</option>
+                      <option value="Premium Economy">Premium Economy</option>
+                      <option value="Business">Business Class</option>
+                      <option value="First">First Class</option>
+                    </select>
+                  </div>
+
+                  <div class="traveller-counters">
+                    <div class="counter-row">
+                      <div class="traveller-info">
+                        <h5>Adults</h5>
+                        <p>12+ Years</p>
+                      </div>
+                      <div class="counter-actions">
+                        <button class="action-btn" [disabled]="travellers.adults <= 1"
+                          (click)="updateTraveller('adults', 'subtract', $event)">-</button>
+                        <span class="count">{{ travellers.adults }}</span>
+                        <button class="action-btn" (click)="updateTraveller('adults', 'add', $event)">+</button>
+                      </div>
+                    </div>
+
+                    <div class="counter-row">
+                      <div class="traveller-info">
+                        <h5>Children</h5>
+                        <p>2-12 Years</p>
+                      </div>
+                      <div class="counter-actions">
+                        <button class="action-btn" [disabled]="travellers.children <= 0"
+                          (click)="updateTraveller('children', 'subtract', $event)">-</button>
+                        <span class="count">{{ travellers.children }}</span>
+                        <button class="action-btn" (click)="updateTraveller('children', 'add', $event)">+</button>
+                      </div>
+                    </div>
+
+                    <div class="counter-row">
+                      <div class="traveller-info">
+                        <h5>Infants</h5>
+                        <p>0-23 Months</p>
+                      </div>
+                      <div class="counter-actions">
+                        <button class="action-btn" [disabled]="travellers.infants <= 0"
+                          (click)="updateTraveller('infants', 'subtract', $event)">-</button>
+                        <span class="count">{{ travellers.infants }}</span>
+                        <button class="action-btn" (click)="updateTraveller('infants', 'add', $event)">+</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button class="apply-btn" (click)="closeTravellerModal()">Apply</button>
+                </div>
+              </div>
+
+              <div class="route-actions" *ngIf="i > 0">
+                <!-- Show Remove Route for middle legs -->
+                <button class="remove-route-btn" (click)="removeRoute(i)" *ngIf="!isLast && multiCityRoutes.length > 2">
+                  <span class="close-icon-circle">×</span> Remove Route
+                </button>
+                <!-- Show Add another Route ONLY for the last leg -->
+                <button class="add-route-btn" (click)="addRoute()" *ngIf="isLast && multiCityRoutes.length < 5">
+                  <span class="plus">+</span> Add another Route
+                </button>
+              </div>
+
+
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Direct Flights Checkbox -->
+        <div class="direct-flights-container">
+          <label class="checkbox-label">
+            <input type="checkbox">
+            <span class="checkmark"></span>
+            Direct flights
+          </label>
+        </div>
+      </ng-container>
+
+      <!-- HOTELS CONTENT -->
+      <ng-container *ngIf="activeTab === 'hotels'">
+        <div class="form-grid hotels-grid">
+
+          <div class="input-box destination-box">
+            <span class="label">Destination/City/Hotel name</span>
+            <input type="text" [(ngModel)]="hotelDestination" class="value-input"
+              style="font-weight: 700; font-size: 20px; color: #1a1a1a;" placeholder="Enter City or Hotel">
+          </div>
+
+          <div class="input-group checkin-group">
+            <div class="input-box date-box" (click)="toggleCalendar('checkin', $event)">
+              <span class="label">Check in</span>
+              <div class="value-date">
+                <span class="day">{{getDay(checkInDate)}}</span> <span
+                  class="month-year">{{getMonthYear(checkInDate)}}</span>
+              </div>
+              <div class="day-name">{{getDayName(checkInDate)}}</div>
+
+              <!-- Custom Calendar Dropdown -->
+              <div class="calendar-dropdown" *ngIf="activeCalendar === 'checkin'" (click)="$event.stopPropagation()">
+                <div class="calendar-header">
+                  <button class="icon-btn" (click)="prevMonth($event)"><span
+                      class="material-symbols-outlined">chevron_left</span></button>
+                  <div class="month-title">{{ currentMonthName }} {{ currentYear }}</div>
+                  <button class="icon-btn" (click)="nextMonth($event)"><span
+                      class="material-symbols-outlined">chevron_right</span></button>
+                </div>
+                <div class="calendar-weekdays">
+                  <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                </div>
+                <div class="calendar-grid">
+                  <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
+                  <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                    (click)="selectDate(day, $event)">
+                    {{ day }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="night-indicator">
+              <div class="circle">{{getNightsCount()}}</div>
+              <div class="label-night">Night{{getNightsCount() !== 1 ? 's' : ''}}</div>
+            </div>
+
+            <div class="input-box date-box" (click)="toggleCalendar('checkout', $event)">
+              <span class="label">Check out</span>
+              <div class="value-date">
+                <span class="day">{{getDay(checkOutDate)}}</span> <span
+                  class="month-year">{{getMonthYear(checkOutDate)}}</span>
+              </div>
+              <div class="day-name">{{getDayName(checkOutDate)}}</div>
+
+              <!-- Custom Calendar Dropdown -->
+              <div class="calendar-dropdown" *ngIf="activeCalendar === 'checkout'" (click)="$event.stopPropagation()">
+                <div class="calendar-header">
+                  <button class="icon-btn" (click)="prevMonth($event)"><span
+                      class="material-symbols-outlined">chevron_left</span></button>
+                  <div class="month-title">{{ currentMonthName }} {{ currentYear }}</div>
+                  <button class="icon-btn" (click)="nextMonth($event)"><span
+                      class="material-symbols-outlined">chevron_right</span></button>
+                </div>
+                <div class="calendar-weekdays">
+                  <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                </div>
+                <div class="calendar-grid">
+                  <div *ngFor="let empty of emptyDays" class="calendar-day empty"></div>
+                  <div *ngFor="let day of monthDays" class="calendar-day" [class.selected]="isSelectedDate(day)"
+                    (click)="selectDate(day, $event)">
+                    {{ day }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-box dropdown-box nationality-box">
+            <div class="dropdown-header">
+              <span class="label">Nationality</span>
+            </div>
+            <div class="value-text dropdown-value">
+              <select [(ngModel)]="nationality" class="custom-select"
+                style="font-weight: 700; color: #1a1a1a; font-size: 18px; border: none; padding: 0; background: transparent; cursor: pointer; outline: none; width: 100%;">
+                <option value="Indian (India)">Indian (India)</option>
+                <option value="American (USA)">American (USA)</option>
+                <option value="British (UK)">British (UK)</option>
+                <option value="Canadian (Canada)">Canadian (Canada)</option>
+                <option value="Australian (Australia)">Australian (Australia)</option>
+              </select>
+              <span class="material-symbols-outlined arrow"
+                style="position: absolute; right: 20px; pointer-events: none;">keyboard_arrow_down</span>
+            </div>
+          </div>
+
+          <div class="input-box dropdown-box guests-box" (click)="toggleHotelGuestsModal($event)">
+            <div class="dropdown-header">
+              <span class="label">Guests & Rooms</span>
+              <span class="material-symbols-outlined arrow">keyboard_arrow_down</span>
+            </div>
+            <div class="value-date">
+              <span class="day">{{getTotalHotelGuests()}}</span> <span class="month-year">Guest{{getTotalHotelGuests()
+                !== 1 ? 's' : ''}}</span>
+            </div>
+            <div class="day-name">{{hotelGuests.rooms}} Room{{hotelGuests.rooms !== 1 ? 's' : ''}}</div>
+
+            <!-- Hotel Guests Modal -->
+            <div class="traveller-modal" *ngIf="isHotelGuestsModalOpen" (click)="$event.stopPropagation()">
+              <div class="modal-header">
+                <h4>Select Guests & Rooms</h4>
+                <span class="material-symbols-outlined close-icon" (click)="closeHotelGuestsModal()">close</span>
+              </div>
+
+              <div class="traveller-counters">
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Rooms</h5>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="hotelGuests.rooms <= 1"
+                      (click)="updateHotelGuest('rooms', 'subtract', $event)">-</button>
+                    <span class="count">{{ hotelGuests.rooms }}</span>
+                    <button class="action-btn" (click)="updateHotelGuest('rooms', 'add', $event)">+</button>
+                  </div>
+                </div>
+
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Adults</h5>
+                    <p>12+ Years</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="hotelGuests.adults <= 1"
+                      (click)="updateHotelGuest('adults', 'subtract', $event)">-</button>
+                    <span class="count">{{ hotelGuests.adults }}</span>
+                    <button class="action-btn" (click)="updateHotelGuest('adults', 'add', $event)">+</button>
+                  </div>
+                </div>
+
+                <div class="counter-row">
+                  <div class="traveller-info">
+                    <h5>Children</h5>
+                    <p>0-12 Years</p>
+                  </div>
+                  <div class="counter-actions">
+                    <button class="action-btn" [disabled]="hotelGuests.children <= 0"
+                      (click)="updateHotelGuest('children', 'subtract', $event)">-</button>
+                    <span class="count">{{ hotelGuests.children }}</span>
+                    <button class="action-btn" (click)="updateHotelGuest('children', 'add', $event)">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <button class="apply-btn" (click)="closeHotelGuestsModal()">Apply</button>
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+
+      <!-- SEARCH BUTTON -->
+      <div class="search-btn-wrapper">
+        <button class="primary-search-btn">
+          <span class="material-symbols-outlined">search</span> Search
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
